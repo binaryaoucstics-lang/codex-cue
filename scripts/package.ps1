@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param()
+param([switch]$SkipTests)
 
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -36,8 +36,10 @@ foreach ($legacy in $legacyArtifacts) { if (Test-Path -LiteralPath $legacy) { Re
 if (!$?) { throw 'Packaging bootstrap failed.' }
 & (Join-Path $root 'installer\assets\generate-icon.ps1')
 if (!$?) { throw 'Icon generation failed.' }
-& (Join-Path $PSScriptRoot 'test.ps1')
-if (!$?) { throw 'Test suite failed.' }
+if (!$SkipTests) {
+    & (Join-Path $PSScriptRoot 'test.ps1')
+    if (!$?) { throw 'Test suite failed.' }
+}
 & (Join-Path $PSScriptRoot 'build.ps1') -Configuration Release
 if (!$?) { throw 'Release build failed.' }
 

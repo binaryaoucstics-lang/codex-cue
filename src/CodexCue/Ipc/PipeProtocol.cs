@@ -79,6 +79,7 @@ namespace CodexCue.Ipc {
             IDictionary<string, object> payload = ToolCatalog.D(
                 "sessionId", request.SessionId,
                 "title", request.Title,
+                "cancelLabel", request.CancelLabel,
                 "questions", questions.ToArray(),
                 "reviewMode", Review(request.ReviewMode),
                 "maxWaitMs", request.MaxWaitMs,

@@ -55,6 +55,7 @@ namespace CodexCue.Core {
             OptionRequest request = new OptionRequest {
                 SessionId = StringValue(input, "sessionId", Guid.NewGuid().ToString("N")),
                 Title = StringValue(input, "title", StringValue(input, "header", "")),
+                CancelLabel = StringValue(input, "cancelLabel", ""),
                 MaxWaitMs = IntValue(input, "maxWaitMs", 900000),
                 AutoResolutionMs = NullableIntValue(input, "autoResolutionMs")
             };

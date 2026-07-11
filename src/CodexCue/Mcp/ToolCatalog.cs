@@ -42,6 +42,7 @@ namespace CodexCue.Mcp {
                 "properties", D(
                     "sessionId", D("type", "string"),
                     "title", D("type", "string"),
+                    "cancelLabel", D("type", "string", "description", "Optional label for the cancel action, such as Skip."),
                     "questions", D("type", "array", "items", question),
                     "reviewMode", D("type", "string", "enum", new object[] { "auto", "always", "never" }, "default", "auto"),
                     "autoResolutionMs", D("type", "integer", "minimum", 60000, "maximum", 240000),

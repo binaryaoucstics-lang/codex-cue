@@ -18,6 +18,7 @@ namespace CodexCue.Core {
 
         public string SessionId { get; set; }
         public string Title { get; set; }
+        public string CancelLabel { get; set; }
         public IList<OptionQuestion> Questions { get; set; }
         public ReviewMode ReviewMode { get; set; }
         public int? AutoResolutionMs { get; set; }

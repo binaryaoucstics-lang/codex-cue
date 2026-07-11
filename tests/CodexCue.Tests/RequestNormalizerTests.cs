@@ -4,6 +4,14 @@ using CodexCue.Core;
 namespace CodexCue.Tests {
     internal static class RequestNormalizerTests {
         public static void Register(TestRegistry tests) {
+            tests.Add("RequestNormalizer accepts custom cancel label", delegate {
+                IDictionary<string, object> input = Fixtures.Object("new-multi-question.json");
+                input["cancelLabel"] = "Skip";
+                OptionRequest request = RequestNormalizer.Normalize(input);
+                Assert.Equal("Skip", request.CancelLabel);
+                OptionRequest roundTrip = CodexCue.Ipc.PipeProtocol.RequestFromPayload(CodexCue.Ipc.PipeProtocol.RequestPayload(request));
+                Assert.Equal("Skip", roundTrip.CancelLabel);
+            });
             tests.Add("RequestNormalizer new request defaults single required and other", delegate {
                 OptionRequest request = RequestNormalizer.Normalize(Fixtures.Object("new-multi-question.json"));
                 Assert.Equal(2, request.Questions.Count);

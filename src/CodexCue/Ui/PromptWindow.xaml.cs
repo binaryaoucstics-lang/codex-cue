@@ -51,8 +51,10 @@ namespace CodexCue.Ui {
         }
 
         private void ApplyShellStrings() {
-            CancelButton.Content = Strings.Cancel;
-            AutomationProperties.SetName(CancelButton, Strings.Cancel);
+            string cancelLabel = String.IsNullOrWhiteSpace(viewModel.State.Request.CancelLabel)
+                ? Strings.Cancel : viewModel.State.Request.CancelLabel;
+            CancelButton.Content = cancelLabel;
+            AutomationProperties.SetName(CancelButton, cancelLabel);
             BackButton.Content = Strings.Back;
             AutomationProperties.SetName(BackButton, Strings.Back);
             ReviewTitle.Text = Strings.ReviewTitle;

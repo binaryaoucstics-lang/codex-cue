@@ -8,6 +8,7 @@ using CodexCue.Hooks;
 using CodexCue.Install;
 using CodexCue.Ipc;
 using CodexCue.Mcp;
+using CodexCue.Settings;
 using CodexCue.Ui;
 
 namespace CodexCue {
@@ -128,6 +129,17 @@ namespace CodexCue {
                 Dispatcher.BeginInvoke(new Action(delegate {
                     if (activeWindow != null) { activeWindow.Show(); activeWindow.Activate(); }
                 }));
+            };
+            trayController.SettingsRequested += delegate {
+                Dispatcher.BeginInvoke(new Action(delegate {
+                    using (SettingsDialog dialog = new SettingsDialog(CueSettingsStore.Current())) dialog.ShowDialog();
+                }));
+            };
+            trayController.SkipNextRequested += delegate {
+                CueSettingsStore store = CueSettingsStore.Current();
+                CueSettings settings = store.Load();
+                settings.SkipNextCompletion = true;
+                store.Save(settings);
             };
             trayController.ExitRequested += delegate { Shutdown(0); };
         }

@@ -54,7 +54,7 @@ foreach ($required in @('ask_options', 'codex_cue', 'every user-facing question'
 }
 if ($skillText -match '\[TODO') { throw 'Skill still contains TODO placeholders.' }
 if ($agentText -notmatch 'Use \$cue-prompts') { throw 'Agent metadata default prompt does not invoke the skill.' }
-foreach ($required in @('2 or 3', 'ask_options', 'codex_cue', 'allowOther', 'submitted', 'cancelled', 'timed_out', 'PowerShell')) {
+foreach ($required in @('configured number', 'default to 3', 'ask_options', 'codex_cue', 'allowOther', 'cancelLabel', 'submitted', 'cancelled', 'timed_out', 'Skip', 'PowerShell')) {
     if ($nextSkillText -notmatch [regex]::Escape($required)) { throw "Next-step skill is missing required guidance: $required" }
 }
 if ($nextSkillText -match '\[TODO') { throw 'Next-step skill still contains TODO placeholders.' }
