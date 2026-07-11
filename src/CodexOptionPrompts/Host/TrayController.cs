@@ -5,6 +5,7 @@ using System.Windows.Forms;
 namespace CodexOptionPrompts.Host {
     public sealed class TrayController : IDisposable {
         private readonly NotifyIcon icon;
+        private readonly Icon applicationIcon;
 
         public TrayController() {
             ToolStripMenuItem open = new ToolStripMenuItem("Open");
@@ -15,9 +16,10 @@ namespace CodexOptionPrompts.Host {
             menu.Items.Add(open);
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add(exit);
+            applicationIcon = Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
             icon = new NotifyIcon {
                 Text = "Codex Option Prompts",
-                Icon = SystemIcons.Application,
+                Icon = applicationIcon ?? SystemIcons.Application,
                 ContextMenuStrip = menu,
                 Visible = true
             };
@@ -31,6 +33,7 @@ namespace CodexOptionPrompts.Host {
             icon.Visible = false;
             if (icon.ContextMenuStrip != null) icon.ContextMenuStrip.Dispose();
             icon.Dispose();
+            if (applicationIcon != null) applicationIcon.Dispose();
         }
 
         private void Raise(EventHandler handler) {

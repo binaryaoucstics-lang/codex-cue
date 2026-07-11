@@ -13,6 +13,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <FileAlignment>512</FileAlignment>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\installer\assets\CodexOptionPrompts.ico</ApplicationIcon>
     <OutputPath>..\..\build\$(Configuration)\</OutputPath>
     <BaseIntermediateOutputPath>..\..\build\obj\CodexOptionPrompts\</BaseIntermediateOutputPath>
   </PropertyGroup>
