@@ -120,7 +120,7 @@
 }
 ```
 
-结果状态为 `submitted`、`cancelled` 或 `timed_out`。成功结果按问题原始顺序返回 `answers`，并标记 `source: desktop-wpf`。`option_prompt_status` 只报告版本和队列数量，不暴露问题或答案内容。
+结果状态为 `submitted`、`skipped`、`cancelled` 或 `timed_out`。`skipped` 表示用户点击了明确的跳过按钮，`cancelled` 表示用户取消或关闭了窗口；成功结果按问题原始顺序返回 `answers`。`option_prompt_status` 只报告版本和队列数量，不暴露问题或答案内容。
 
 ## 升级、备份与卸载
 

@@ -42,7 +42,8 @@ namespace CodexCue.Mcp {
                 "properties", D(
                     "sessionId", D("type", "string"),
                     "title", D("type", "string"),
-                    "cancelLabel", D("type", "string", "description", "Optional label for the cancel action, such as Skip."),
+                    "cancelLabel", D("type", "string", "description", "Custom cancel-button label."),
+                    "cancelResult", D("type", "string", "enum", new object[] { "cancelled", "skipped" }, "default", "cancelled"),
                     "questions", D("type", "array", "items", question),
                     "reviewMode", D("type", "string", "enum", new object[] { "auto", "always", "never" }, "default", "auto"),
                     "autoResolutionMs", D("type", "integer", "minimum", 60000, "maximum", 240000),
@@ -50,9 +51,7 @@ namespace CodexCue.Mcp {
                     "question", D("type", "string"),
                     "header", D("type", "string"),
                     "options", options,
-                    "recommendedOptionId", D("type", "string"),
-                    "uiMode", D("type", "string", "enum", new object[] { "overlay", "browser", "none" }),
-                    "fallbackToBrowser", D("type", "boolean")),
+                    "recommendedOptionId", D("type", "string")),
                 "anyOf", new object[] {
                     D("required", new object[] { "questions" }),
                     D("required", new object[] { "question" })
@@ -60,7 +59,7 @@ namespace CodexCue.Mcp {
 
             return D(
                 "name", "ask_options",
-                "description", "Ask the user any question in the native Windows wizard. Use for every clarification, confirmation, approval, missing detail, preference, open-ended response, single-select choice, or multi-select choice instead of asking in assistant prose. Send text directly as MCP JSON; never use PowerShell, shell commands, or files to transport it. For open-ended input, use an empty options array with allowOther true.",
+                "description", "Show native Windows questions. Supports single, multiple, free text, explicit skipped/cancelled results, and direct MCP JSON text transport.",
                 "inputSchema", schema,
                 "annotations", D(
                     "title", "Ask the user",

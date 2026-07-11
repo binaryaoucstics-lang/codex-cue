@@ -7,7 +7,7 @@ using CodexCue.Settings;
 namespace CodexCue.Hooks {
     public static class HookContextWriter {
         public const string RoutingPolicy =
-            "Mandatory user-question routing policy: Any time you would ask the user a question or request a response, clarification, confirmation, approval, missing detail, preference, or selection, call the ask_options MCP tool from the codex_cue server immediately. Do not first write the question or choices in assistant prose. This includes both enumerable choices and genuinely open-ended questions. For an open-ended question, send one question with options: [], allowOther: true, and a useful otherLabel. Put all question and option text directly in the MCP JSON arguments. Never use PowerShell, a shell command, or a temporary file to transport question or option text, and do not read the cue-prompts SKILL.md through the shell before calling the tool. Let the task determine the number of questions and options and whether each question is single- or multi-select. Do not call the tool when no user response is needed. If ask_options is unavailable or returns an MCP error, ask one concise plain-text question as the fallback.";
+            "For every user-facing question or response request, call codex_cue.ask_options instead of asking in prose. Send text only in MCP JSON, never PowerShell, shell, clipboard, or files. Open text uses options:[], allowOther:true. submitted answers; skipped is explicit skip; cancelled is window cancellation; timed_out is no action.";
 
         public static void Write(string hookEvent, TextWriter output) {
             Write(hookEvent, new StringReader("{}"), output);
@@ -39,7 +39,9 @@ namespace CodexCue.Hooks {
 
             IDictionary<string, object> hookSpecificOutput = new Dictionary<string, object>();
             hookSpecificOutput["hookEventName"] = canonicalEvent;
-            hookSpecificOutput["additionalContext"] = RoutingPolicy + " " + CompletionPolicy(settings);
+            hookSpecificOutput["additionalContext"] = canonicalEvent == "SessionStart"
+                ? RoutingPolicy + " " + CompletionPolicy(settings)
+                : RoutingPolicy;
 
             IDictionary<string, object> contextResponse = new Dictionary<string, object>();
             contextResponse["hookSpecificOutput"] = hookSpecificOutput;
@@ -48,17 +50,17 @@ namespace CodexCue.Hooks {
 
         private static string CompletionPolicy(CueSettings settings) {
             if (!settings.CompletionSuggestionsEnabled) {
-                return "Completed-task follow-up prompts are disabled in Codex Cue settings. Do not invoke next-step-options unless the user explicitly requests suggestions.";
+                return "Completion prompts are disabled; do not invoke next-step-options unless requested.";
             }
-            return "Mandatory completed-task follow-up policy: Whenever the current user-requested task is genuinely complete, use the next-step-options skill before ending the turn. Generate exactly " +
+            return "After genuinely completing work, use $next-step-options once with exactly " +
                 settings.CompletionOptionCount + " relevant next-task choice" + (settings.CompletionOptionCount == 1 ? "" : "s") +
-                " and call ask_options from codex_cue so the user can click one. Treat cancellation or timeout as Skip: finish without asking again. Do not run this workflow for incomplete work, blockers, greetings, status-only replies, or when the user explicitly opted out.";
+                ". Use cancelResult:skipped. Do not prompt for incomplete work, blockers, greetings, status-only replies, or opt-out.";
         }
 
         private static string CompletionContinuationReason(int optionCount) {
-            return "Before ending this turn, check whether the user's requested task is genuinely complete. If required work remains, continue it. If complete and follow-up choices have not already been handled, use $next-step-options now: create exactly " +
+            return "If work is complete and follow-up was not handled, use $next-step-options once with exactly " +
                 optionCount + " relevant next-task choice" + (optionCount == 1 ? "" : "s") +
-                " and call codex_cue.ask_options. Set allowOther: true. Cancellation or timeout means Skip; finish immediately without another follow-up prompt. If the tool was already handled, the task is blocked or incomplete, this is only a greeting/status reply, or the user opted out, finish without prompting.";
+                ", allowOther:true, localized cancelLabel:Skip, cancelResult:skipped. submitted continues; skipped/cancelled/timed_out ends without repeating. Otherwise finish normally.";
         }
 
         public static string CanonicalEvent(string hookEvent) {

@@ -30,6 +30,7 @@ namespace CodexCue.Ui {
             viewModel.PropertyChanged += OnViewModelPropertyChanged;
             viewModel.Completed += OnResolved;
             viewModel.Cancelled += OnCancelled;
+            viewModel.Skipped += OnSkipped;
             Loaded += OnLoaded;
             ApplyShellStrings();
             ApplyHighContrastShell();
@@ -374,7 +375,10 @@ namespace CodexCue.Ui {
 
         private void OnNextClick(object sender, RoutedEventArgs e) { viewModel.Next(); }
         private void OnBackClick(object sender, RoutedEventArgs e) { viewModel.Back(); }
-        private void OnCancelClick(object sender, RoutedEventArgs e) { RequestCancel(); }
+        private void OnCancelClick(object sender, RoutedEventArgs e) {
+            if (String.Equals(viewModel.State.Request.CancelResult, "skipped", StringComparison.Ordinal)) RequestSkip();
+            else RequestCancel();
+        }
 
         private void OnEditClick(object sender, RoutedEventArgs e) {
             Button button = (Button)sender;
@@ -392,6 +396,11 @@ namespace CodexCue.Ui {
             return true;
         }
 
+        private void RequestSkip() {
+            closeRequested = true;
+            viewModel.Skip();
+        }
+
         private bool HasInput() {
             foreach (QuestionAnswer answer in viewModel.State.BuildAnswers()) {
                 if (answer.SelectedOptionIds.Count > 0 || !String.IsNullOrWhiteSpace(answer.OtherText)) return true;
@@ -405,6 +414,11 @@ namespace CodexCue.Ui {
         }
 
         private void OnCancelled(object sender, EventArgs e) {
+            closeRequested = true;
+            Close();
+        }
+
+        private void OnSkipped(object sender, EventArgs e) {
             closeRequested = true;
             Close();
         }

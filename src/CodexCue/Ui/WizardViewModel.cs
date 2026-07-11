@@ -26,6 +26,7 @@ namespace CodexCue.Ui {
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler<WizardCompletedEventArgs> Completed;
         public event EventHandler Cancelled;
+        public event EventHandler Skipped;
 
         public ICommand SelectCommand { get; private set; }
         public ICommand NextCommand { get; private set; }
@@ -136,6 +137,13 @@ namespace CodexCue.Ui {
             if (resolved) return;
             resolved = true;
             EventHandler handler = Cancelled;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        public void Skip() {
+            if (resolved) return;
+            resolved = true;
+            EventHandler handler = Skipped;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 

@@ -12,6 +12,7 @@ namespace CodexCue.Core {
             Questions = new List<OptionQuestion>();
             CompatibilityWarnings = new List<string>();
             ReviewMode = ReviewMode.Auto;
+            CancelResult = "cancelled";
             MaxWaitMs = 900000;
             CreatedAt = DateTime.UtcNow;
         }
@@ -19,6 +20,7 @@ namespace CodexCue.Core {
         public string SessionId { get; set; }
         public string Title { get; set; }
         public string CancelLabel { get; set; }
+        public string CancelResult { get; set; }
         public IList<OptionQuestion> Questions { get; set; }
         public ReviewMode ReviewMode { get; set; }
         public int? AutoResolutionMs { get; set; }

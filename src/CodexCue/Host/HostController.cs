@@ -92,7 +92,7 @@ namespace CodexCue.Host {
         public PromptHostStatus GetStatus() {
             lock (sync) {
                 return new PromptHostStatus {
-                    ApplicationVersion = "2.0.0",
+                    ApplicationVersion = "2.1.0",
                     ProtocolVersion = 1,
                     IsRunning = !stopped,
                     ActiveCount = active == null ? 0 : 1,

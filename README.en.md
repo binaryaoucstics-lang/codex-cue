@@ -105,7 +105,7 @@ Right-click the Codex Cue checkmark in the Windows notification area and select 
 }
 ```
 
-Results use the `submitted`, `cancelled`, or `timed_out` status. Successful results return ordered `answers` and identify `source: desktop-wpf`. `option_prompt_status` reports only the version and queue counts and never exposes prompt or answer text.
+Results use `submitted`, `skipped`, `cancelled`, or `timed_out`. `skipped` means the user clicked an explicit Skip action; `cancelled` means the user cancelled or closed the window. Successful results return ordered `answers`. `option_prompt_status` reports only version and queue counts.
 
 ## Build and test
 

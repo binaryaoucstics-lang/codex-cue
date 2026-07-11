@@ -80,6 +80,7 @@ namespace CodexCue.Ipc {
                 "sessionId", request.SessionId,
                 "title", request.Title,
                 "cancelLabel", request.CancelLabel,
+                "cancelResult", request.CancelResult,
                 "questions", questions.ToArray(),
                 "reviewMode", Review(request.ReviewMode),
                 "maxWaitMs", request.MaxWaitMs,

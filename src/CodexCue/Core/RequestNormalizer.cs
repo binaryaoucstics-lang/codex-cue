@@ -56,6 +56,7 @@ namespace CodexCue.Core {
                 SessionId = StringValue(input, "sessionId", Guid.NewGuid().ToString("N")),
                 Title = StringValue(input, "title", StringValue(input, "header", "")),
                 CancelLabel = StringValue(input, "cancelLabel", ""),
+                CancelResult = StringValue(input, "cancelResult", "cancelled"),
                 MaxWaitMs = IntValue(input, "maxWaitMs", 900000),
                 AutoResolutionMs = NullableIntValue(input, "autoResolutionMs")
             };

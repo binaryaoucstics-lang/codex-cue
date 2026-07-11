@@ -172,6 +172,7 @@ namespace CodexCue {
                 hostController.Submit(pending.SessionId, ResultFactory.Submitted(pending.Request, args.Answers, "user"));
             };
             viewModel.Cancelled += delegate { hostController.Cancel(pending.SessionId); };
+            viewModel.Skipped += delegate { hostController.Submit(pending.SessionId, ResultFactory.Skipped(pending.Request)); };
             PromptWindow window = new PromptWindow(viewModel);
             activeWindow = window;
             activeSessionId = pending.SessionId;
@@ -200,6 +201,7 @@ namespace CodexCue {
             WizardViewModel viewModel = new WizardViewModel(state);
             viewModel.Completed += delegate { ScheduleDemoShutdown(); };
             viewModel.Cancelled += delegate { ScheduleDemoShutdown(); };
+            viewModel.Skipped += delegate { ScheduleDemoShutdown(); };
             activeWindow = new PromptWindow(viewModel);
             activeWindow.Topmost = automation;
             activeWindow.Closed += delegate { activeWindow = null; ScheduleDemoShutdown(); };
