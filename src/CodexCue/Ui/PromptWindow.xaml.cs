@@ -20,6 +20,7 @@ namespace CodexCue.Ui {
         private bool closeRequested;
         private int renderedIndex = -1;
         private bool renderedReview;
+        private bool fittingWindow;
 
         public PromptWindow(WizardViewModel viewModel) {
             if (viewModel == null) throw new ArgumentNullException("viewModel");
@@ -43,8 +44,7 @@ namespace CodexCue.Ui {
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e) {
-            double maximumHeight = Math.Max(MinHeight, SystemParameters.WorkArea.Height * 0.8);
-            Height = Math.Min(816, maximumHeight);
+            FitWindowToContent();
             UpdateProgress(true);
             StartGradientAnimation();
             if (optionButtons.Count > 0) optionButtons[0].Focus();
@@ -104,6 +104,28 @@ namespace CodexCue.Ui {
             else RenderQuestion();
             RefreshChrome();
             ContentScroller.ScrollToTop();
+            if (IsLoaded) Dispatcher.BeginInvoke(new Action(FitWindowToContent), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+
+        private void FitWindowToContent() {
+            if (fittingWindow) return;
+            fittingWindow = true;
+            try {
+                Rect workArea = SystemParameters.WorkArea;
+                double maximumHeight = Math.Max(MinHeight, workArea.Height - 24);
+                double contentWidth = Math.Max(320, Width - 132);
+                FrameworkElement content = viewModel.IsReview ? (FrameworkElement)ReviewPanel : QuestionPanel;
+                content.Measure(new Size(contentWidth, Double.PositiveInfinity));
+
+                // Header (49), footer (114), outer border margins (40), and scroller margins (72).
+                double desiredHeight = Math.Ceiling(content.DesiredSize.Height + 275);
+                double targetHeight = Math.Max(MinHeight, Math.Min(maximumHeight, desiredHeight));
+                bool contentFits = desiredHeight <= maximumHeight + 0.5;
+                ContentScroller.VerticalScrollBarVisibility = contentFits
+                    ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
+                Height = targetHeight;
+                Top = workArea.Top + Math.Max(0, (workArea.Height - targetHeight) / 2);
+            } finally { fittingWindow = false; }
         }
 
         private void RenderQuestion() {
@@ -116,10 +138,12 @@ namespace CodexCue.Ui {
             QuestionDescription.Visibility = String.IsNullOrEmpty(question.Description) ? Visibility.Collapsed : Visibility.Visible;
             OptionsPanel.Children.Clear();
             optionButtons.Clear();
+            bool compact = question.Options.Count > 2;
+            ApplyQuestionDensity(compact);
 
             int index = 0;
             foreach (OptionChoice option in question.Options) {
-                ToggleButton button = CreateOptionButton(question, option, index++);
+                ToggleButton button = CreateOptionButton(question, option, index++, compact);
                 optionButtons.Add(button);
                 OptionsPanel.Children.Add(button);
             }
@@ -133,13 +157,24 @@ namespace CodexCue.Ui {
             RefreshAnswerControls();
         }
 
-        private ToggleButton CreateOptionButton(OptionQuestion question, OptionChoice option, int index) {
+        private void ApplyQuestionDensity(bool compact) {
+            ContentScroller.Margin = compact ? new Thickness(46, 32, 46, 18) : new Thickness(46, 44, 46, 28);
+            OptionsPanel.Margin = compact ? new Thickness(0, 24, 0, 0) : new Thickness(0, 34, 0, 0);
+            OtherContainer.Height = compact ? 64 : 74;
+            OtherTextBox.Height = compact ? 64 : 74;
+        }
+
+        private ToggleButton CreateOptionButton(OptionQuestion question, OptionChoice option, int index, bool compact) {
             ToggleButton button;
             if (question.Mode == CodexCue.Core.SelectionMode.Single) {
                 button = new RadioButton { GroupName = "Question_" + question.Id };
             } else button = new CheckBox();
             button.Style = (Style)FindResource("OptionToggleStyle");
-            button.Margin = new Thickness(0, 0, 0, 20);
+            button.Margin = compact ? new Thickness(0, 0, 0, 12) : new Thickness(0, 0, 0, 20);
+            if (compact) {
+                button.Padding = new Thickness(20, 16, 20, 16);
+                button.MinHeight = 78;
+            }
             button.Tag = option.Id;
             button.TabIndex = 10 + index;
             AutomationProperties.SetAutomationId(button, "Option_" + option.Id);
@@ -159,7 +194,7 @@ namespace CodexCue.Ui {
             content.Children.Add(new TextBlock {
                 Text = option.Label,
                 FontFamily = (FontFamily)FindResource("ShellFont"),
-                FontSize = 24,
+                FontSize = compact ? 22 : 24,
                 FontWeight = FontWeights.SemiBold,
                 Foreground = labelBrush,
                 TextWrapping = TextWrapping.Wrap
@@ -167,14 +202,14 @@ namespace CodexCue.Ui {
             if (!String.IsNullOrEmpty(option.Description)) {
                 content.Children.Add(new TextBlock {
                     Text = option.Description,
-                    Margin = new Thickness(0, 9, 0, 0),
+                    Margin = new Thickness(0, compact ? 6 : 9, 0, 0),
                     FontFamily = (FontFamily)FindResource("ShellFont"),
-                    FontSize = 20,
-                    LineHeight = 28,
+                    FontSize = compact ? 18 : 20,
+                    LineHeight = compact ? 24 : 28,
                     Foreground = descriptionBrush,
                     TextWrapping = TextWrapping.Wrap
                 });
-                button.MinHeight = 94;
+                button.MinHeight = compact ? 84 : 94;
             }
             button.Content = content;
             button.Checked += OnOptionToggled;
@@ -183,6 +218,7 @@ namespace CodexCue.Ui {
         }
 
         private void RenderReview() {
+            ContentScroller.Margin = new Thickness(46, 44, 46, 28);
             QuestionPanel.Visibility = Visibility.Collapsed;
             ReviewPanel.Visibility = Visibility.Visible;
             ReviewItems.Children.Clear();

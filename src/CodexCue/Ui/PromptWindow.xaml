@@ -47,7 +47,8 @@
                       Margin="46,44,46,28"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
-                      Focusable="False">
+                      Focusable="False"
+                      AutomationProperties.AutomationId="ContentScroller">
           <Grid>
             <StackPanel x:Name="QuestionPanel">
               <TextBlock x:Name="QuestionPrompt"

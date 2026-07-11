@@ -236,6 +236,10 @@ namespace CodexCue {
                 Label = "仅提供便携版",
                 Description = "无需安装，但不会自动配置插件。"
             });
+            if (String.Equals(Environment.GetEnvironmentVariable("CODEX_CUE_MANY_OPTIONS"), "1", StringComparison.Ordinal)) {
+                publish.Options.Add(new OptionChoice { Id = "weekend", Label = "朋友聚会", Description = "约朋友吃饭、聊天或玩乐。" });
+                publish.Options.Add(new OptionChoice { Id = "explore", Label = "探索新地", Description = "去一个没去过的地方走走。" });
+            }
             request.Questions.Add(publish);
 
             OptionQuestion targets = new OptionQuestion {

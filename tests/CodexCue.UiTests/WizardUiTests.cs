@@ -3,6 +3,16 @@ using CodexCue.Tests;
 namespace CodexCue.UiTests {
     internal static class WizardUiTests {
         public static void Register(TestRegistry tests) {
+            tests.Add("WizardUi shows four options without scrolling", delegate {
+                using (UiDriver ui = UiDriver.StartManyOptions()) {
+                    ui.WaitForWindow("PromptWindow", 3000);
+                    Assert.True(ui.IsFullyVisible("Option_installer"));
+                    Assert.True(ui.IsFullyVisible("Option_portable"));
+                    Assert.True(ui.IsFullyVisible("Option_weekend"));
+                    Assert.True(ui.IsFullyVisible("Option_explore"));
+                    Assert.Equal(0, ui.VisibleScrollBarCount());
+                }
+            });
             tests.Add("WizardUi demo completes single and multiple answers", delegate {
                 using (UiDriver ui = UiDriver.Start("--demo --automation")) {
                     ui.WaitForWindow("PromptWindow", 3000);
