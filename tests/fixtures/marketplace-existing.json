@@ -1,0 +1,16 @@
+{
+  "name": "personal-plugins",
+  "interface": { "displayName": "Personal Plugins" },
+  "unknownRoot": "preserved",
+  "plugins": [
+    { "name": "first", "custom": "keep-first" },
+    {
+      "name": "codex-option-prompts",
+      "source": { "source": "local", "path": "./plugins/codex-option-prompts-old" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Legacy",
+      "custom": "old-entry"
+    },
+    { "name": "last", "custom": "keep-last" }
+  ]
+}

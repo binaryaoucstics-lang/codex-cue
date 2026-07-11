@@ -1,0 +1,11 @@
+{
+  "header": "Choose a path",
+  "question": "Which path should Codex use?",
+  "options": [
+    { "id": "simple", "label": "Simple", "description": "Use the smallest path." },
+    { "id": "full", "label": "Full", "description": "Build the full version." }
+  ],
+  "recommendedOptionId": "simple",
+  "uiMode": "browser",
+  "fallbackToBrowser": false
+}

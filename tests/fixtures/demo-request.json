@@ -1,0 +1,24 @@
+{
+  "questions": [
+    {
+      "id": "publish-mode",
+      "prompt": "选择这项功能的发布方式",
+      "description": "请选择一项，也可以填写自己的方案。",
+      "options": [
+        { "id": "installer", "label": "本机安装 + 可分发安装包", "description": "适合当前电脑测试，也方便分享给其他用户。", "recommended": true },
+        { "id": "portable", "label": "仅提供便携版", "description": "无需安装，但不会自动配置插件。" }
+      ]
+    },
+    {
+      "id": "targets",
+      "prompt": "选择要包含的发布目标",
+      "description": "可以选择多项，也可以补充自己的方案。",
+      "mode": "multiple",
+      "options": [
+        { "id": "windows", "label": "Windows 本机安装版" },
+        { "id": "portable", "label": "可分发便携包" }
+      ]
+    }
+  ],
+  "reviewMode": "auto"
+}

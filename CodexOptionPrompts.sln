@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodexOptionPrompts", "src\CodexOptionPrompts\CodexOptionPrompts.csproj", "{2A9B9A83-AD82-4839-8D4A-9E4B866E5873}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodexOptionPrompts.Tests", "tests\CodexOptionPrompts.Tests\CodexOptionPrompts.Tests.csproj", "{EC2E29EC-04D9-4BBA-B647-6C744173C599}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodexOptionPrompts.UiTests", "tests\CodexOptionPrompts.UiTests\CodexOptionPrompts.UiTests.csproj", "{A773AF05-34F2-44A6-8DD8-22AEE9FE6D21}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A9B9A83-AD82-4839-8D4A-9E4B866E5873}.Debug|x64.ActiveCfg = Debug|x64
+		{2A9B9A83-AD82-4839-8D4A-9E4B866E5873}.Debug|x64.Build.0 = Debug|x64
+		{2A9B9A83-AD82-4839-8D4A-9E4B866E5873}.Release|x64.ActiveCfg = Release|x64
+		{2A9B9A83-AD82-4839-8D4A-9E4B866E5873}.Release|x64.Build.0 = Release|x64
+		{EC2E29EC-04D9-4BBA-B647-6C744173C599}.Debug|x64.ActiveCfg = Debug|x64
+		{EC2E29EC-04D9-4BBA-B647-6C744173C599}.Debug|x64.Build.0 = Debug|x64
+		{EC2E29EC-04D9-4BBA-B647-6C744173C599}.Release|x64.ActiveCfg = Release|x64
+		{EC2E29EC-04D9-4BBA-B647-6C744173C599}.Release|x64.Build.0 = Release|x64
+		{A773AF05-34F2-44A6-8DD8-22AEE9FE6D21}.Debug|x64.ActiveCfg = Debug|x64
+		{A773AF05-34F2-44A6-8DD8-22AEE9FE6D21}.Debug|x64.Build.0 = Debug|x64
+		{A773AF05-34F2-44A6-8DD8-22AEE9FE6D21}.Release|x64.ActiveCfg = Release|x64
+		{A773AF05-34F2-44A6-8DD8-22AEE9FE6D21}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "codex_option_prompts": {
+      "command": "./bin/CodexOptionPrompts.exe",
+      "args": ["--mcp"],
+      "cwd": ".",
+      "tool_timeout_sec": 900,
+      "startup_timeout_sec": 10
+    }
+  }
+}

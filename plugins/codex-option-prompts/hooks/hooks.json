@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${PLUGIN_ROOT}/bin/CodexOptionPrompts.exe\" --hook session-start",
+            "commandWindows": "\"${PLUGIN_ROOT}\\bin\\CodexOptionPrompts.exe\" --hook session-start",
+            "timeout": 10,
+            "statusMessage": "Loading clickable decision routing"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${PLUGIN_ROOT}/bin/CodexOptionPrompts.exe\" --hook user-prompt-submit",
+            "commandWindows": "\"${PLUGIN_ROOT}\\bin\\CodexOptionPrompts.exe\" --hook user-prompt-submit",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

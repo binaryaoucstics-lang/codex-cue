@@ -1,0 +1,14 @@
+{
+  "questions": [
+    {
+      "id": "duplicate",
+      "prompt": "First",
+      "options": [{ "id": "a", "label": "A" }]
+    },
+    {
+      "id": "duplicate",
+      "prompt": "Second",
+      "options": [{ "id": "b", "label": "B" }]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "title": "Release decisions",
+  "questions": [
+    {
+      "id": "publish-mode",
+      "prompt": "Choose a release mode",
+      "description": "Pick one or enter another answer.",
+      "options": [
+        {
+          "id": "installer",
+          "label": "Installer",
+          "description": "Install and configure the plugin.",
+          "recommended": true
+        },
+        {
+          "id": "portable",
+          "label": "Portable",
+          "description": "Run without installation."
+        }
+      ]
+    },
+    {
+      "id": "targets",
+      "prompt": "Choose targets",
+      "mode": "multiple",
+      "options": [
+        { "id": "windows", "label": "Windows", "recommended": true },
+        { "id": "portable", "label": "Portable ZIP" }
+      ]
+    }
+  ]
+}
