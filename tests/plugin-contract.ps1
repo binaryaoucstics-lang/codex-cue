@@ -8,9 +8,11 @@ $manifestPath = Join-Path $plugin '.codex-plugin\plugin.json'
 $mcpPath = Join-Path $plugin '.mcp.json'
 $skillPath = Join-Path $plugin 'skills\option-prompts\SKILL.md'
 $agentPath = Join-Path $plugin 'skills\option-prompts\agents\openai.yaml'
+$nextSkillPath = Join-Path $plugin 'skills\next-step-options\SKILL.md'
+$nextAgentPath = Join-Path $plugin 'skills\next-step-options\agents\openai.yaml'
 $hooksPath = Join-Path $plugin 'hooks\hooks.json'
 
-foreach ($path in @($manifestPath, $mcpPath, $skillPath, $agentPath, $hooksPath)) {
+foreach ($path in @($manifestPath, $mcpPath, $skillPath, $agentPath, $nextSkillPath, $nextAgentPath, $hooksPath)) {
     if (!(Test-Path -LiteralPath $path)) { throw "Missing plugin contract file: $path" }
 }
 
@@ -18,10 +20,12 @@ $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
 $mcp = Get-Content -LiteralPath $mcpPath -Raw | ConvertFrom-Json
 $skillText = Get-Content -LiteralPath $skillPath -Raw
 $agentText = Get-Content -LiteralPath $agentPath -Raw
+$nextSkillText = Get-Content -LiteralPath $nextSkillPath -Raw
+$nextAgentText = Get-Content -LiteralPath $nextAgentPath -Raw
 $hooks = Get-Content -LiteralPath $hooksPath -Raw | ConvertFrom-Json
 
 if ($manifest.name -ne 'codex-option-prompts') { throw 'Unexpected plugin name.' }
-if ($manifest.version -notmatch '^1\.2\.1(\+codex\.[0-9A-Za-z.-]+)?$') { throw 'Plugin version is not a valid 1.2.1 release.' }
+if ($manifest.version -notmatch '^1\.3\.0(\+codex\.[0-9A-Za-z.-]+)?$') { throw 'Plugin version is not a valid 1.3.0 release.' }
 if ($manifest.mcpServers -ne './.mcp.json') { throw 'Plugin manifest does not reference .mcp.json.' }
 if ($manifest.skills -ne './skills/') { throw 'Plugin manifest does not reference skills/.' }
 if ($manifest.interface.category -ne 'Productivity') { throw 'Plugin category must be Productivity.' }
@@ -35,7 +39,7 @@ if ($server.command -ne './bin/CodexOptionPrompts.exe') { throw 'MCP command mus
 if ($server.args -notcontains '--mcp') { throw 'MCP server does not start in --mcp mode.' }
 if ($server.tool_timeout_sec -ne 900) { throw 'MCP tool timeout must be 900 seconds.' }
 
-foreach ($eventName in @('SessionStart', 'UserPromptSubmit')) {
+foreach ($eventName in @('SessionStart', 'UserPromptSubmit', 'Stop')) {
     $eventHooks = @($hooks.hooks.$eventName)
     if ($eventHooks.Count -ne 1) { throw "Hook configuration must define exactly one $eventName group." }
     $handler = @($eventHooks[0].hooks)[0]
@@ -50,5 +54,10 @@ foreach ($required in @('ask_options', 'codex_option_prompts', 'every user-facin
 }
 if ($skillText -match '\[TODO') { throw 'Skill still contains TODO placeholders.' }
 if ($agentText -notmatch 'Use \$option-prompts') { throw 'Agent metadata default prompt does not invoke the skill.' }
+foreach ($required in @('2 or 3', 'ask_options', 'codex_option_prompts', 'allowOther', 'submitted', 'cancelled', 'timed_out', 'PowerShell')) {
+    if ($nextSkillText -notmatch [regex]::Escape($required)) { throw "Next-step skill is missing required guidance: $required" }
+}
+if ($nextSkillText -match '\[TODO') { throw 'Next-step skill still contains TODO placeholders.' }
+if ($nextAgentText -notmatch 'Use \$next-step-options') { throw 'Next-step agent metadata does not invoke the skill.' }
 
 Write-Output 'Plugin contract passed.'

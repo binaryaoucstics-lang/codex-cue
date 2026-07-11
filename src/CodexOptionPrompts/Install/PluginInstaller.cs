@@ -208,7 +208,7 @@ namespace CodexOptionPrompts.Install {
             string manifest = Path.Combine(paths.PluginDirectory, ".codex-plugin", "plugin.json");
             IDictionary<string, object> value = codec.ParseObject(File.ReadAllText(manifest, Encoding.UTF8));
             object version;
-            return value.TryGetValue("version", out version) ? Convert.ToString(version) : "1.2.1";
+            return value.TryGetValue("version", out version) ? Convert.ToString(version) : "1.3.0";
         }
 
         private ManagedInstall ReadManagedManifest(string path) {

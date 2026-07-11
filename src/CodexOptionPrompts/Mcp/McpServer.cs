@@ -113,7 +113,7 @@ namespace CodexOptionPrompts.Mcp {
             return ToolCatalog.D(
                 "protocolVersion", ProtocolVersion,
                 "capabilities", ToolCatalog.D("tools", ToolCatalog.D()),
-                "serverInfo", ToolCatalog.D("name", "codex-option-prompts", "version", "1.2.1"),
+                "serverInfo", ToolCatalog.D("name", "codex-option-prompts", "version", "1.3.0"),
                 "instructions", "Call ask_options directly for every question that needs a user response, including open-ended questions. Send all text in MCP JSON. Never use PowerShell, shell commands, clipboards, or files to transport question text.");
         }
 

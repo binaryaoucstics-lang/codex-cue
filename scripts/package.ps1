@@ -71,7 +71,9 @@ foreach ($validator in @($cacheScript, $skillValidator, $pluginValidator)) {
     if (!(Test-Path -LiteralPath $validator)) { throw "Required Codex validator not found: $validator" }
 }
 Invoke-Checked 'python' @($cacheScript, $pluginDestination, '--cachebuster', $cachebuster)
-Invoke-Checked 'python' @($skillValidator, (Join-Path $pluginDestination 'skills\option-prompts'))
+foreach ($skill in @('option-prompts', 'next-step-options')) {
+    Invoke-Checked 'python' @($skillValidator, (Join-Path $pluginDestination ('skills\' + $skill)))
+}
 Invoke-Checked 'python' @($pluginValidator, $pluginDestination)
 
 $forbidden = @()

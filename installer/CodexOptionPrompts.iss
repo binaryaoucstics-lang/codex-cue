@@ -6,7 +6,7 @@
 #endif
 
 #define AppName "Codex Option Prompts"
-#define AppVersion "1.2.1"
+#define AppVersion "1.3.0"
 #define AppPublisher "binaryaoucstics-lang"
 
 [Setup]

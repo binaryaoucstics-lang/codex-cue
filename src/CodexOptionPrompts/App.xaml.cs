@@ -61,7 +61,7 @@ namespace CodexOptionPrompts {
         }
 
         private static void RunHook(string hookEvent) {
-            HookContextWriter.Write(hookEvent, Console.Out);
+            HookContextWriter.Write(hookEvent, Console.In, Console.Out);
         }
 
         private void RunInstall(CodexOptionPrompts.Application.AppModeOptions options) {

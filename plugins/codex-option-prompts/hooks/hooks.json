@@ -25,6 +25,19 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${PLUGIN_ROOT}/bin/CodexOptionPrompts.exe\" --hook stop",
+            "commandWindows": "\"${PLUGIN_ROOT}\\bin\\CodexOptionPrompts.exe\" --hook stop",
+            "timeout": 10,
+            "statusMessage": "Preparing clickable next steps"
+          }
+        ]
+      }
     ]
   }
 }

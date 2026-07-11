@@ -92,7 +92,7 @@ namespace CodexOptionPrompts.Host {
         public PromptHostStatus GetStatus() {
             lock (sync) {
                 return new PromptHostStatus {
-                    ApplicationVersion = "1.2.1",
+                    ApplicationVersion = "1.3.0",
                     ProtocolVersion = 1,
                     IsRunning = !stopped,
                     ActiveCount = active == null ? 0 : 1,

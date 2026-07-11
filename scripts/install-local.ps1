@@ -34,6 +34,7 @@ foreach ($required in @(
     (Join-Path $plugin '.mcp.json'),
     (Join-Path $plugin 'bin\CodexOptionPrompts.exe'),
     (Join-Path $plugin 'skills\option-prompts\SKILL.md'),
+    (Join-Path $plugin 'skills\next-step-options\SKILL.md'),
     (Join-Path $plugin 'hooks\hooks.json'),
     $marketplace,
     (Join-Path $data 'managed-manifest.json'),
@@ -44,7 +45,7 @@ foreach ($required in @(
 
 $manifest = Get-Content -LiteralPath (Join-Path $plugin '.codex-plugin\plugin.json') -Raw | ConvertFrom-Json
 if ($manifest.name -ne 'codex-option-prompts') { throw 'Installed plugin name is invalid.' }
-if ($manifest.version -notmatch '^1\.2\.1\+codex\.[0-9a-f]{7,40}$') {
+if ($manifest.version -notmatch '^1\.3\.0\+codex\.[0-9a-f]{7,40}$') {
     throw "Installed plugin cachebuster version is invalid: $($manifest.version)"
 }
 
