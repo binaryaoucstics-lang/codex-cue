@@ -113,7 +113,7 @@ namespace CodexCue.Mcp {
             return ToolCatalog.D(
                 "protocolVersion", ProtocolVersion,
                 "capabilities", ToolCatalog.D("tools", ToolCatalog.D()),
-                "serverInfo", ToolCatalog.D("name", "codex-cue", "version", "2.1.0"),
+                "serverInfo", ToolCatalog.D("name", "codex-cue", "version", "2.2.0"),
                 "instructions", "Use ask_options for user responses. Send text only in MCP JSON. statuses: submitted, skipped, cancelled, timed_out.");
         }
 

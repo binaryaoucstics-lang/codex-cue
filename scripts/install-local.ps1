@@ -45,7 +45,7 @@ foreach ($required in @(
 
 $manifest = Get-Content -LiteralPath (Join-Path $plugin '.codex-plugin\plugin.json') -Raw | ConvertFrom-Json
 if ($manifest.name -ne 'codex-cue') { throw 'Installed plugin name is invalid.' }
-if ($manifest.version -notmatch '^2\.1\.0\+codex\.[0-9a-f]{7,40}$') {
+if ($manifest.version -notmatch '^2\.2\.0\+codex\.[0-9a-f]{7,40}$') {
     throw "Installed plugin cachebuster version is invalid: $($manifest.version)"
 }
 

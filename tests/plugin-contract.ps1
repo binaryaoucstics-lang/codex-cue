@@ -25,7 +25,7 @@ $nextAgentText = Get-Content -LiteralPath $nextAgentPath -Raw
 $hooks = Get-Content -LiteralPath $hooksPath -Raw | ConvertFrom-Json
 
 if ($manifest.name -ne 'codex-cue') { throw 'Unexpected plugin name.' }
-if ($manifest.version -notmatch '^2\.1\.0(\+codex\.[0-9A-Za-z.-]+)?$') { throw 'Plugin version is not a valid 2.1.0 release.' }
+if ($manifest.version -notmatch '^2\.2\.0(\+codex\.[0-9A-Za-z.-]+)?$') { throw 'Plugin version is not a valid 2.2.0 release.' }
 if ($manifest.mcpServers -ne './.mcp.json') { throw 'Plugin manifest does not reference .mcp.json.' }
 if ($manifest.skills -ne './skills/') { throw 'Plugin manifest does not reference skills/.' }
 if ($manifest.interface.category -ne 'Productivity') { throw 'Plugin category must be Productivity.' }

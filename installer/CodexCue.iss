@@ -6,7 +6,7 @@
 #endif
 
 #define AppName "Codex Cue"
-#define AppVersion "2.1.0"
+#define AppVersion "2.2.0"
 #define AppPublisher "binaryaoucstics-lang"
 
 [Setup]
