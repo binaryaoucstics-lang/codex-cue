@@ -1,0 +1,150 @@
+<Window x:Class="CodexCue.Ui.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Codex Cue 设置"
+        Width="560" Height="472"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
+        FontFamily="{StaticResource ShellFont}"
+        AutomationProperties.AutomationId="SettingsWindow"
+        PreviewKeyDown="OnPreviewKeyDown">
+  <Window.Resources>
+    <Style x:Key="CueCheckBoxStyle" TargetType="CheckBox">
+      <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+      <Setter Property="FontSize" Value="17" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="CheckBox">
+            <Grid Background="Transparent">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="28" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <Border x:Name="Box" Width="21" Height="21" HorizontalAlignment="Left"
+                      VerticalAlignment="Center" Background="White"
+                      BorderBrush="#A8B5C8" BorderThickness="1.5" CornerRadius="5">
+                <Path x:Name="Check" Visibility="Collapsed" Data="M 4 10 L 8 14 L 16 5"
+                      Stroke="White" StrokeThickness="2.4" StrokeStartLineCap="Round"
+                      StrokeEndLineCap="Round" />
+              </Border>
+              <ContentPresenter Grid.Column="1" VerticalAlignment="Center" />
+            </Grid>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Box" Property="Background" Value="{StaticResource PrimaryBrush}" />
+                <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+                <Setter TargetName="Check" Property="Visibility" Value="Visible" />
+              </Trigger>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.45" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="StepperButtonStyle" TargetType="Button" BasedOn="{StaticResource TextButtonStyle}">
+      <Setter Property="Width" Value="46" />
+      <Setter Property="Height" Value="46" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="FontSize" Value="25" />
+      <Setter Property="FontWeight" Value="Normal" />
+      <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
+    </Style>
+  </Window.Resources>
+
+  <Grid Background="Transparent">
+    <Border x:Name="OuterBorder" Margin="20" Background="White" CornerRadius="18">
+      <Border.Effect>
+        <DropShadowEffect BlurRadius="28" ShadowDepth="8" Opacity="0.22" Color="#52647C" />
+      </Border.Effect>
+      <Grid ClipToBounds="True">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="70" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="86" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="#FAFBFD" MouseLeftButtonDown="OnHeaderMouseLeftButtonDown">
+          <TextBlock Margin="28,0,0,0" VerticalAlignment="Center" Text="Codex Cue 设置"
+                     FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource InkBrush}" />
+          <Button Width="48" Height="48" Margin="0,0,12,0" HorizontalAlignment="Right"
+                  VerticalAlignment="Center" Content="×" FontSize="28"
+                  Style="{StaticResource TextButtonStyle}" AutomationProperties.AutomationId="SettingsCloseButton"
+                  Click="OnCancelClick" />
+        </Grid>
+
+        <StackPanel Grid.Row="1" Margin="28,22,28,18">
+          <Border Padding="20,17" Background="White" BorderBrush="{StaticResource LineBrush}"
+                  BorderThickness="1" CornerRadius="13" Margin="0,0,0,12">
+            <CheckBox x:Name="CompletionEnabled" Content="任务完成时显示下一步选项"
+                      Style="{StaticResource CueCheckBoxStyle}"
+                      AutomationProperties.AutomationId="CompletionEnabled"
+                      Checked="OnEnabledChanged" Unchecked="OnEnabledChanged" />
+          </Border>
+
+          <Border x:Name="CountCard" Padding="20,13" Background="#F8FAFF"
+                  BorderBrush="#B8C9E5" BorderThickness="1" CornerRadius="13" Margin="0,0,0,12">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="每次显示的选项数量" FontSize="17" FontWeight="SemiBold"
+                           Foreground="{StaticResource InkBrush}" />
+                <TextBlock Text="可设置为 1–6 个" Margin="0,5,0,0" FontSize="14"
+                           Foreground="{StaticResource MutedBrush}" />
+              </StackPanel>
+              <Border Grid.Column="1" Background="White" BorderBrush="{StaticResource PrimaryBrush}"
+                      BorderThickness="1.5" CornerRadius="11">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="46" />
+                    <ColumnDefinition Width="58" />
+                    <ColumnDefinition Width="46" />
+                  </Grid.ColumnDefinitions>
+                  <Button Grid.Column="0" Content="−" Style="{StaticResource StepperButtonStyle}"
+                          AutomationProperties.AutomationId="DecreaseOptionCount" Click="OnDecreaseClick" />
+                  <Border Grid.Column="1" BorderBrush="#DDE5F1" BorderThickness="1,0">
+                    <TextBlock x:Name="OptionCountText" Text="3" HorizontalAlignment="Center"
+                               VerticalAlignment="Center" FontSize="24" FontWeight="SemiBold"
+                               Foreground="{StaticResource InkBrush}"
+                               AutomationProperties.AutomationId="OptionCountValue" />
+                  </Border>
+                  <Button Grid.Column="2" Content="+" Style="{StaticResource StepperButtonStyle}"
+                          AutomationProperties.AutomationId="IncreaseOptionCount" Click="OnIncreaseClick" />
+                </Grid>
+              </Border>
+            </Grid>
+          </Border>
+
+          <Border Padding="20,17" Background="White" BorderBrush="{StaticResource LineBrush}"
+                  BorderThickness="1" CornerRadius="13">
+            <CheckBox x:Name="SkipNext" Content="跳过下一次任务完成建议（仅一次）"
+                      Style="{StaticResource CueCheckBoxStyle}"
+                      AutomationProperties.AutomationId="SkipNextCompletion" />
+          </Border>
+        </StackPanel>
+
+        <Border Grid.Row="2" BorderBrush="#E7EBF2" BorderThickness="0,1,0,0" Background="White">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,28,0">
+            <Button Content="取消" MinWidth="96" Margin="0,0,12,0"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    AutomationProperties.AutomationId="SettingsCancelButton" Click="OnCancelClick" />
+            <Button Content="保存" MinWidth="100" Style="{StaticResource PrimaryButtonStyle}"
+                    AutomationProperties.AutomationId="SettingsSaveButton" Click="OnSaveClick" />
+          </StackPanel>
+        </Border>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

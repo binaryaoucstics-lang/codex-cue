@@ -41,7 +41,8 @@ namespace CodexCue {
             } else if (options.Mode == CodexCue.Application.AppMode.Host) {
                 StartHost();
             } else if (options.Mode == CodexCue.Application.AppMode.Demo) {
-                StartDemo(options.Automation);
+                if (String.Equals(Environment.GetEnvironmentVariable("CODEX_CUE_SETTINGS_DEMO"), "1", StringComparison.Ordinal)) StartSettingsDemo();
+                else StartDemo(options.Automation);
             } else if (options.Mode == CodexCue.Application.AppMode.InstallPlugin) {
                 RunInstall(options);
             } else if (options.Mode == CodexCue.Application.AppMode.UninstallPlugin) {
@@ -132,7 +133,10 @@ namespace CodexCue {
             };
             trayController.SettingsRequested += delegate {
                 Dispatcher.BeginInvoke(new Action(delegate {
-                    using (SettingsDialog dialog = new SettingsDialog(CueSettingsStore.Current())) dialog.ShowDialog();
+                    SettingsWindow window = new SettingsWindow(CueSettingsStore.Current());
+                    window.Owner = activeWindow;
+                    window.Topmost = true;
+                    window.ShowDialog();
                 }));
             };
             trayController.SkipNextRequested += delegate {
@@ -200,6 +204,15 @@ namespace CodexCue {
             activeWindow.Closed += delegate { activeWindow = null; ScheduleDemoShutdown(); };
             MainWindow = activeWindow;
             activeWindow.Show();
+        }
+
+        private void StartSettingsDemo() {
+            ShutdownMode = System.Windows.ShutdownMode.OnLastWindowClose;
+            SettingsWindow window = new SettingsWindow(CueSettingsStore.Current());
+            window.Topmost = true;
+            window.ShowInTaskbar = true;
+            MainWindow = window;
+            window.Show();
         }
 
         private void ScheduleDemoShutdown() {

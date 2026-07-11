@@ -3,6 +3,22 @@ using CodexCue.Tests;
 namespace CodexCue.UiTests {
     internal static class WizardUiTests {
         public static void Register(TestRegistry tests) {
+            tests.Add("SettingsUi displays and changes option count", delegate {
+                using (UiDriver ui = UiDriver.StartSettings()) {
+                    ui.WaitForWindow("SettingsWindow", 3000);
+                    Assert.True(ui.IsFullyVisible("OptionCountValue"));
+                    int initial = System.Int32.Parse(ui.Name("OptionCountValue"));
+                    if (initial < 6) {
+                        ui.Click("IncreaseOptionCount");
+                        Assert.Equal(initial + 1, System.Int32.Parse(ui.Name("OptionCountValue")));
+                    } else {
+                        ui.Click("DecreaseOptionCount");
+                        Assert.Equal(initial - 1, System.Int32.Parse(ui.Name("OptionCountValue")));
+                    }
+                    ui.Click("SettingsCancelButton");
+                    Assert.True(ui.WaitForExit(1000));
+                }
+            });
             tests.Add("WizardUi shows four options without scrolling", delegate {
                 using (UiDriver ui = UiDriver.StartManyOptions()) {
                     ui.WaitForWindow("PromptWindow", 3000);
