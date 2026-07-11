@@ -5,8 +5,8 @@
   "plugins": [
     { "name": "first", "custom": "keep-first" },
     {
-      "name": "codex-option-prompts",
-      "source": { "source": "local", "path": "./plugins/codex-option-prompts-old" },
+      "name": "codex-cue",
+      "source": { "source": "local", "path": "./plugins/codex-cue-old" },
       "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
       "category": "Legacy",
       "custom": "old-entry"

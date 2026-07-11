@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
-if ([string]::IsNullOrWhiteSpace($OutputPath)) { $OutputPath = Join-Path $PSScriptRoot 'CodexOptionPrompts.ico' }
+if ([string]::IsNullOrWhiteSpace($OutputPath)) { $OutputPath = Join-Path $PSScriptRoot 'CodexCue.ico' }
 
 function New-RoundedPath([System.Drawing.RectangleF]$Rectangle, [float]$Radius) {
     $path = [System.Drawing.Drawing2D.GraphicsPath]::new()

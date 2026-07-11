@@ -17,7 +17,7 @@ if (!(Test-Path -LiteralPath $msbuild)) { throw "MSBuild not found: $msbuild" }
 
 $frameworkPath = Join-Path $root '.tools\net48\1.0.3\build\.NETFramework\v4.8'
 $arguments = @(
-    (Join-Path $root 'CodexOptionPrompts.sln'),
+    (Join-Path $root 'CodexCue.sln'),
     '/nologo',
     '/m',
     '/t:Build',
