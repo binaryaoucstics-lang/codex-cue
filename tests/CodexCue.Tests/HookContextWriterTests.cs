@@ -70,8 +70,13 @@ namespace CodexCue.Tests {
                 string context = specific["additionalContext"] as string;
                 Assert.True(context != null && context.IndexOf("codex_cue", StringComparison.Ordinal) >= 0);
                 Assert.True(context.IndexOf("ask_options", StringComparison.Ordinal) >= 0);
-                Assert.True(context.IndexOf("next-step-options", StringComparison.OrdinalIgnoreCase) >= 0);
-                Assert.True(context.IndexOf("exactly 5", StringComparison.OrdinalIgnoreCase) >= 0);
+                Assert.True(context.IndexOf("skipped", StringComparison.OrdinalIgnoreCase) >= 0);
+                if (expectedEvent == "SessionStart") {
+                    Assert.True(context.IndexOf("next-step-options", StringComparison.OrdinalIgnoreCase) >= 0);
+                    Assert.True(context.IndexOf("exactly 5", StringComparison.OrdinalIgnoreCase) >= 0);
+                } else {
+                    Assert.False(context.IndexOf("next-step-options", StringComparison.OrdinalIgnoreCase) >= 0);
+                }
             });
         }
 

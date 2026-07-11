@@ -26,11 +26,12 @@ namespace CodexCue.Tests {
                 Assert.False(schema.Contains("maxItems"));
             });
 
-            tests.Add("Mcp ask options advertises direct questions without shell transport", delegate {
+            tests.Add("Mcp ask options advertises concise result semantics", delegate {
                 IDictionary<string, object> result = McpFixtures.Call("tools/list", null, new FakePromptClient());
                 string json = new JsonCodec().Serialize(result);
-                Assert.True(json.Contains("every clarification"));
-                Assert.True(json.Contains("PowerShell"));
+                Assert.True(json.Contains("native Windows"));
+                Assert.True(json.Contains("skipped"));
+                Assert.True(json.Contains("cancelled"));
                 Assert.True(json.Contains("readOnlyHint"));
                 Assert.True(json.Contains("question"));
             });
