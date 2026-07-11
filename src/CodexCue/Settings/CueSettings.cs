@@ -8,18 +8,21 @@ namespace CodexCue.Settings {
         public bool CompletionSuggestionsEnabled { get; set; }
         public int CompletionOptionCount { get; set; }
         public bool SkipNextCompletion { get; set; }
+        public string AccentColor { get; set; }
 
         public static CueSettings Defaults() {
             return new CueSettings {
                 CompletionSuggestionsEnabled = true,
                 CompletionOptionCount = 3,
-                SkipNextCompletion = false
+                SkipNextCompletion = false,
+                AccentColor = "blue"
             };
         }
 
         public void Normalize() {
             if (CompletionOptionCount < 1) CompletionOptionCount = 1;
             if (CompletionOptionCount > 6) CompletionOptionCount = 6;
+            AccentColor = AccentTheme.Find(AccentColor).Id;
         }
     }
 

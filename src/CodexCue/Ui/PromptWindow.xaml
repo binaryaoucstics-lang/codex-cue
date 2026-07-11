@@ -155,9 +155,9 @@
                 <LinearGradientBrush.RelativeTransform>
                   <TranslateTransform x:Name="GradientTransform" X="0" />
                 </LinearGradientBrush.RelativeTransform>
-                <GradientStop Color="#1D4ED8" Offset="0" />
-                <GradientStop Color="#2563EB" Offset="0.48" />
-                <GradientStop Color="#60A5FA" Offset="1" />
+                <GradientStop Color="{DynamicResource AccentStartColor}" Offset="0" />
+                <GradientStop Color="{DynamicResource AccentPrimaryColor}" Offset="0.48" />
+                <GradientStop Color="{DynamicResource AccentEndColor}" Offset="1" />
               </LinearGradientBrush>
             </Border.Background>
           </Border>

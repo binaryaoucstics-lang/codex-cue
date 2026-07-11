@@ -23,6 +23,7 @@ namespace CodexCue {
 
         protected override void OnStartup(System.Windows.StartupEventArgs e) {
             base.OnStartup(e);
+            AccentTheme.Apply(CueSettingsStore.Current().Load().AccentColor);
             CodexCue.Application.AppModeOptions options;
             try {
                 options = CodexCue.Application.AppModeParser.Parse(e.Args);
