@@ -5,9 +5,13 @@ $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $artifacts = Join-Path $root 'artifacts'
 $staging = Join-Path $artifacts 'staging'
-$setup = Join-Path $artifacts 'CodexOptionPrompts-Setup-x64.exe'
-$portable = Join-Path $artifacts 'CodexOptionPrompts-portable-x64.zip'
+$setup = Join-Path $artifacts 'CodexCue-Setup-x64.exe'
+$portable = Join-Path $artifacts 'CodexCue-portable-x64.zip'
 $sums = Join-Path $artifacts 'SHA256SUMS.txt'
+$legacyArtifacts = @(
+    (Join-Path $artifacts 'CodexOptionPrompts-Setup-x64.exe'),
+    (Join-Path $artifacts 'CodexOptionPrompts-portable-x64.zip')
+)
 $limit = 5000000
 
 function Assert-UnderRoot([string]$Path, [string]$AllowedRoot) {
@@ -27,6 +31,7 @@ function Invoke-Checked([string]$File, [string[]]$Arguments) {
 }
 
 New-Item -ItemType Directory -Path $artifacts -Force | Out-Null
+foreach ($legacy in $legacyArtifacts) { if (Test-Path -LiteralPath $legacy) { Remove-Item -LiteralPath $legacy -Force } }
 & (Join-Path $PSScriptRoot 'bootstrap.ps1') -Packaging
 if (!$?) { throw 'Packaging bootstrap failed.' }
 & (Join-Path $root 'installer\assets\generate-icon.ps1')
@@ -38,15 +43,15 @@ if (!$?) { throw 'Release build failed.' }
 
 Remove-GeneratedDirectory $staging
 New-Item -ItemType Directory -Path $staging -Force | Out-Null
-Copy-Item -LiteralPath (Join-Path $root 'build\Release\CodexOptionPrompts.exe') -Destination (Join-Path $staging 'CodexOptionPrompts.exe') -Force
+Copy-Item -LiteralPath (Join-Path $root 'build\Release\CodexCue.exe') -Destination (Join-Path $staging 'CodexCue.exe') -Force
 Copy-Item -LiteralPath (Join-Path $root 'installer\assets\HOOK-TRUST.txt') -Destination (Join-Path $staging 'HOOK-TRUST.txt') -Force
 Copy-Item -LiteralPath (Join-Path $root 'LICENSE') -Destination (Join-Path $staging 'LICENSE') -Force
 Copy-Item -LiteralPath (Join-Path $root 'NOTICE') -Destination (Join-Path $staging 'NOTICE') -Force
-$pluginDestination = Join-Path $staging 'plugins\codex-option-prompts'
+$pluginDestination = Join-Path $staging 'plugins\codex-cue'
 New-Item -ItemType Directory -Path (Split-Path $pluginDestination -Parent) -Force | Out-Null
-Copy-Item -LiteralPath (Join-Path $root 'plugins\codex-option-prompts') -Destination $pluginDestination -Recurse -Force
+Copy-Item -LiteralPath (Join-Path $root 'plugins\codex-cue') -Destination $pluginDestination -Recurse -Force
 New-Item -ItemType Directory -Path (Join-Path $pluginDestination 'bin') -Force | Out-Null
-Copy-Item -LiteralPath (Join-Path $root 'build\Release\CodexOptionPrompts.exe') -Destination (Join-Path $pluginDestination 'bin\CodexOptionPrompts.exe') -Force
+Copy-Item -LiteralPath (Join-Path $root 'build\Release\CodexCue.exe') -Destination (Join-Path $pluginDestination 'bin\CodexCue.exe') -Force
 
 $cacheMaterial = New-Object Text.StringBuilder
 foreach ($file in Get-ChildItem -LiteralPath $pluginDestination -File -Recurse | Sort-Object FullName) {
@@ -71,7 +76,9 @@ foreach ($validator in @($cacheScript, $skillValidator, $pluginValidator)) {
     if (!(Test-Path -LiteralPath $validator)) { throw "Required Codex validator not found: $validator" }
 }
 Invoke-Checked 'python' @($cacheScript, $pluginDestination, '--cachebuster', $cachebuster)
-Invoke-Checked 'python' @($skillValidator, (Join-Path $pluginDestination 'skills\option-prompts'))
+foreach ($skill in @('cue-prompts', 'next-step-options')) {
+    Invoke-Checked 'python' @($skillValidator, (Join-Path $pluginDestination ('skills\' + $skill)))
+}
 Invoke-Checked 'python' @($pluginValidator, $pluginDestination)
 
 $forbidden = @()
@@ -84,7 +91,7 @@ if ($forbidden.Count -gt 0) { throw "Staging contains forbidden release files: $
 foreach ($old in @($setup, $portable, $sums)) { if (Test-Path -LiteralPath $old) { Remove-Item -LiteralPath $old -Force } }
 $iscc = (Get-Content -LiteralPath (Join-Path $root '.tools\inno-path.txt') -Raw).Trim()
 if (!(Test-Path -LiteralPath $iscc)) { throw "Inno compiler missing: $iscc" }
-$iss = Join-Path $root 'installer\CodexOptionPrompts.iss'
+$iss = Join-Path $root 'installer\CodexCue.iss'
 Invoke-Checked $iscc @('/Qp', ("/DSourceRoot=$staging"), ("/DOutputDir=$artifacts"), $iss)
 if (!(Test-Path -LiteralPath $setup)) { throw 'Inno Setup did not create the expected installer.' }
 

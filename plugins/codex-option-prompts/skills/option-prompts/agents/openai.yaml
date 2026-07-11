@@ -1,4 +1,0 @@
-interface:
-  display_name: "Option Prompts"
-  short_description: "Route every user question to the desktop wizard."
-  default_prompt: "Use $option-prompts for every question or choice that needs my response."

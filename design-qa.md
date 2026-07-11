@@ -1,4 +1,4 @@
-# Codex Option Prompts Design QA
+# Codex Cue Design QA
 
 ## Comparison target
 

@@ -19,8 +19,8 @@ foreach ($scriptPath in Get-ChildItem -LiteralPath (Join-Path $root 'scripts') -
     }
 }
 $required = @(
-    (Join-Path $root 'artifacts\CodexOptionPrompts-Setup-x64.exe'),
-    (Join-Path $root 'artifacts\CodexOptionPrompts-portable-x64.zip'),
+    (Join-Path $root 'artifacts\CodexCue-Setup-x64.exe'),
+    (Join-Path $root 'artifacts\CodexCue-portable-x64.zip'),
     (Join-Path $root 'artifacts\SHA256SUMS.txt')
 )
 
@@ -34,10 +34,10 @@ foreach ($path in $required[0..1]) {
 $zip = [IO.Compression.ZipFile]::OpenRead($required[1])
 try {
     $entries = @($zip.Entries | ForEach-Object { $_.FullName })
-    if ($entries -notcontains 'plugins/codex-option-prompts/bin/CodexOptionPrompts.exe') {
+    if ($entries -notcontains 'plugins/codex-cue/bin/CodexCue.exe') {
         throw 'Portable ZIP is missing the MCP executable.'
     }
-    if ($entries -notcontains 'plugins/codex-option-prompts/hooks/hooks.json') {
+    if ($entries -notcontains 'plugins/codex-cue/hooks/hooks.json') {
         throw 'Portable ZIP is missing the automatic routing hooks.'
     }
     if ($entries -notcontains 'HOOK-TRUST.txt') {
@@ -56,7 +56,7 @@ try {
 $hashLines = @(Get-Content -LiteralPath $required[2] | Where-Object { $_.Trim() })
 if ($hashLines.Count -ne 2) { throw 'SHA256SUMS.txt must contain exactly two hashes.' }
 foreach ($line in $hashLines) {
-    if ($line -notmatch '^[0-9a-f]{64}  CodexOptionPrompts-(Setup-x64\.exe|portable-x64\.zip)$') {
+    if ($line -notmatch '^[0-9a-f]{64}  CodexCue-(Setup-x64\.exe|portable-x64\.zip)$') {
         throw "Invalid SHA256SUMS line: $line"
     }
 }

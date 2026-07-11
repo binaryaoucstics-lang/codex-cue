@@ -8,8 +8,8 @@ if ([string]::IsNullOrWhiteSpace($ArtifactRoot)) {
     $ArtifactRoot = Join-Path $PSScriptRoot '..\artifacts\staging'
 }
 $artifact = [IO.Path]::GetFullPath($ArtifactRoot)
-$executable = Join-Path $artifact 'CodexOptionPrompts.exe'
-$installedExecutable = Join-Path $env:LOCALAPPDATA 'Programs\CodexOptionPrompts\CodexOptionPrompts.exe'
+$executable = Join-Path $artifact 'CodexCue.exe'
+$installedExecutable = Join-Path $env:LOCALAPPDATA 'Programs\CodexCue\CodexCue.exe'
 if (!(Test-Path -LiteralPath $executable)) { throw "Staged executable missing: $executable" }
 
 Add-Type -AssemblyName UIAutomationClient
@@ -29,7 +29,7 @@ function Assert-Equal($Expected, $Actual, [string]$Message) {
 }
 
 function Stop-StagedProcesses {
-    Get-CimInstance Win32_Process -Filter "Name='CodexOptionPrompts.exe'" -ErrorAction SilentlyContinue |
+    Get-CimInstance Win32_Process -Filter "Name='CodexCue.exe'" -ErrorAction SilentlyContinue |
         Where-Object {
             if (!$_.ExecutablePath) { return $false }
             $path = [IO.Path]::GetFullPath($_.ExecutablePath)
@@ -88,7 +88,7 @@ function Initialize-Mcp($Client, [int]$Id) {
         jsonrpc = '2.0'; id = $Id; method = 'initialize'
         params = [ordered]@{ protocolVersion = '2024-11-05'; capabilities = @{}; clientInfo = @{ name = 'e2e'; version = '1.0' } }
     })
-    Assert-Equal 'codex-option-prompts' $initialize.result.serverInfo.name 'Unexpected MCP server.'
+    Assert-Equal 'codex-cue' $initialize.result.serverInfo.name 'Unexpected MCP server.'
 }
 
 function New-Question([string]$Id, [string]$Prompt, [string]$Mode, [object[]]$Options, [bool]$AllowOther) {

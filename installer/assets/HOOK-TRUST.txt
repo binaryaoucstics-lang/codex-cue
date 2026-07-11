@@ -1,15 +1,15 @@
-Codex Option Prompts 1.2.1 - 启用自动提问向导
+Codex Cue 2.0.0 - 启用自动提问与下一步向导
 
 Codex 出于安全考虑，不允许安装程序静默信任命令钩子。首次安装或钩子更新后，请完成一次审核：
 
 1. 新建一个 Codex 任务。
 2. 在 Codex CLI 中输入 /hooks。
-3. 找到 codex-option-prompts 提供的 SessionStart 与 UserPromptSubmit 钩子。
-4. 检查命令指向插件内的 bin/CodexOptionPrompts.exe，然后选择信任并启用。
-5. 再新建一个任务；此后需要向用户提问或提供选项时，Codex 会自动打开桌面向导。
+3. 找到 codex-cue 提供的 SessionStart、UserPromptSubmit 与 Stop 钩子。
+4. 检查命令指向插件内的 bin/CodexCue.exe，然后选择信任并启用。
+5. 再新建一个任务；此后需要向用户提问或任务完成后推荐下一步时，Codex 会自动打开桌面向导。
 
 如果未完成信任，Skill 与 ask_options 工具仍可手动使用，但自动路由钩子会被 Codex 跳过。
 
 Automatic choice routing requires a one-time hook review in Codex. Open /hooks, review the
-SessionStart and UserPromptSubmit commands bundled by codex-option-prompts, then trust and enable
+SessionStart, UserPromptSubmit, and Stop commands bundled by codex-cue, then trust and enable
 them. Codex intentionally prevents installers from silently bypassing this review.

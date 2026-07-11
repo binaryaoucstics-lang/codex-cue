@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cue Prompts"
+  short_description: "Route every user question to the desktop wizard."
+  default_prompt: "Use $cue-prompts for every question or choice that needs my response."

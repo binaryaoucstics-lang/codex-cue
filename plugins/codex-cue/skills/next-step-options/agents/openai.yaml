@@ -1,0 +1,4 @@
+interface:
+  display_name: "Next Step Options"
+  short_description: "Offer clickable next tasks after completed work."
+  default_prompt: "Use $next-step-options to offer clickable next tasks after completing the current work."
