@@ -1,6 +1,25 @@
 # Codex Option Prompts for Windows
 
-一个轻量的 Windows 桌面提问向导。Codex 通过本机 MCP 工具打开逐题界面，用户可直接点击单选、多选，也可以回答开放式问题。无需再复制粘贴回答
+一个轻量的 Windows 桌面提问向导。Codex 通过本机 MCP 工具打开逐题界面，用户可直接点击单选、多选，也可以回答开放式问题。插件可通过生命周期钩子把需要用户回答的问题自动路由到桌面窗口，无需再复制粘贴回答。
+
+## 界面预览
+
+<p align="center">
+  <img src="docs/images/single-select.png" alt="Codex Option Prompts 单选问题界面" width="680">
+</p>
+<p align="center"><em>单选问题：直接点击选项，也可以输入自定义答案。</em></p>
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/multi-select.png" alt="Codex Option Prompts 多选与自由输入界面"></td>
+    <td width="50%"><img src="docs/images/review.png" alt="Codex Option Prompts 答案复核界面"></td>
+  </tr>
+  <tr>
+    <td align="center">多选与自由输入</td>
+    <td align="center">提交前复核与返回修改</td>
+  </tr>
+</table>
+
 ## 安装教程
 
 系统要求：Windows 10 22H2（19045）或更高版本、x64、.NET Framework 4.8。Windows 10/11 通常已包含所需运行时。
