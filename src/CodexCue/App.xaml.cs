@@ -8,6 +8,7 @@ using CodexCue.Hooks;
 using CodexCue.Install;
 using CodexCue.Ipc;
 using CodexCue.Mcp;
+using CodexCue.Settings;
 using CodexCue.Ui;
 
 namespace CodexCue {
@@ -22,6 +23,7 @@ namespace CodexCue {
 
         protected override void OnStartup(System.Windows.StartupEventArgs e) {
             base.OnStartup(e);
+            AccentTheme.Apply(CueSettingsStore.Current().Load().AccentColor);
             CodexCue.Application.AppModeOptions options;
             try {
                 options = CodexCue.Application.AppModeParser.Parse(e.Args);
@@ -40,7 +42,8 @@ namespace CodexCue {
             } else if (options.Mode == CodexCue.Application.AppMode.Host) {
                 StartHost();
             } else if (options.Mode == CodexCue.Application.AppMode.Demo) {
-                StartDemo(options.Automation);
+                if (String.Equals(Environment.GetEnvironmentVariable("CODEX_CUE_SETTINGS_DEMO"), "1", StringComparison.Ordinal)) StartSettingsDemo();
+                else StartDemo(options.Automation);
             } else if (options.Mode == CodexCue.Application.AppMode.InstallPlugin) {
                 RunInstall(options);
             } else if (options.Mode == CodexCue.Application.AppMode.UninstallPlugin) {
@@ -129,6 +132,20 @@ namespace CodexCue {
                     if (activeWindow != null) { activeWindow.Show(); activeWindow.Activate(); }
                 }));
             };
+            trayController.SettingsRequested += delegate {
+                Dispatcher.BeginInvoke(new Action(delegate {
+                    SettingsWindow window = new SettingsWindow(CueSettingsStore.Current());
+                    window.Owner = activeWindow;
+                    window.Topmost = true;
+                    window.ShowDialog();
+                }));
+            };
+            trayController.SkipNextRequested += delegate {
+                CueSettingsStore store = CueSettingsStore.Current();
+                CueSettings settings = store.Load();
+                settings.SkipNextCompletion = true;
+                store.Save(settings);
+            };
             trayController.ExitRequested += delegate { Shutdown(0); };
         }
 
@@ -155,6 +172,7 @@ namespace CodexCue {
                 hostController.Submit(pending.SessionId, ResultFactory.Submitted(pending.Request, args.Answers, "user"));
             };
             viewModel.Cancelled += delegate { hostController.Cancel(pending.SessionId); };
+            viewModel.Skipped += delegate { hostController.Submit(pending.SessionId, ResultFactory.Skipped(pending.Request)); };
             PromptWindow window = new PromptWindow(viewModel);
             activeWindow = window;
             activeSessionId = pending.SessionId;
@@ -183,11 +201,21 @@ namespace CodexCue {
             WizardViewModel viewModel = new WizardViewModel(state);
             viewModel.Completed += delegate { ScheduleDemoShutdown(); };
             viewModel.Cancelled += delegate { ScheduleDemoShutdown(); };
+            viewModel.Skipped += delegate { ScheduleDemoShutdown(); };
             activeWindow = new PromptWindow(viewModel);
             activeWindow.Topmost = automation;
             activeWindow.Closed += delegate { activeWindow = null; ScheduleDemoShutdown(); };
             MainWindow = activeWindow;
             activeWindow.Show();
+        }
+
+        private void StartSettingsDemo() {
+            ShutdownMode = System.Windows.ShutdownMode.OnLastWindowClose;
+            SettingsWindow window = new SettingsWindow(CueSettingsStore.Current());
+            window.Topmost = true;
+            window.ShowInTaskbar = true;
+            MainWindow = window;
+            window.Show();
         }
 
         private void ScheduleDemoShutdown() {
@@ -224,6 +252,10 @@ namespace CodexCue {
                 Label = "仅提供便携版",
                 Description = "无需安装，但不会自动配置插件。"
             });
+            if (String.Equals(Environment.GetEnvironmentVariable("CODEX_CUE_MANY_OPTIONS"), "1", StringComparison.Ordinal)) {
+                publish.Options.Add(new OptionChoice { Id = "weekend", Label = "朋友聚会", Description = "约朋友吃饭、聊天或玩乐。" });
+                publish.Options.Add(new OptionChoice { Id = "explore", Label = "探索新地", Description = "去一个没去过的地方走走。" });
+            }
             request.Questions.Add(publish);
 
             OptionQuestion targets = new OptionQuestion {

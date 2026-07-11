@@ -6,6 +6,9 @@
   <SolidColorBrush x:Key="LineBrush" Color="#D6DEEA" />
   <SolidColorBrush x:Key="PrimaryBrush" Color="#2563EB" />
   <SolidColorBrush x:Key="SelectedBrush" Color="#F5F8FF" />
+  <Color x:Key="AccentStartColor">#1D4ED8</Color>
+  <Color x:Key="AccentPrimaryColor">#2563EB</Color>
+  <Color x:Key="AccentEndColor">#60A5FA</Color>
 
   <Style x:Key="FocusRingStyle" TargetType="Control">
     <Setter Property="Template">
@@ -46,8 +49,8 @@
               <Setter TargetName="Card" Property="BorderBrush" Value="#9FB3D1" />
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
-              <Setter TargetName="Card" Property="Background" Value="{StaticResource SelectedBrush}" />
-              <Setter TargetName="Card" Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+              <Setter TargetName="Card" Property="Background" Value="{DynamicResource SelectedBrush}" />
+              <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
               <Setter TargetName="Card" Property="BorderThickness" Value="3" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
@@ -97,8 +100,8 @@
 
   <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
     <Setter Property="Foreground" Value="White" />
-    <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
-    <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+    <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
     <Setter Property="BorderThickness" Value="1" />
   </Style>
 
@@ -141,7 +144,7 @@
           </Border>
           <ControlTemplate.Triggers>
             <Trigger Property="IsKeyboardFocused" Value="True">
-              <Setter TargetName="TextBorder" Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+              <Setter TargetName="TextBorder" Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
               <Setter TargetName="TextBorder" Property="BorderThickness" Value="2" />
             </Trigger>
           </ControlTemplate.Triggers>

@@ -25,7 +25,7 @@ $nextAgentText = Get-Content -LiteralPath $nextAgentPath -Raw
 $hooks = Get-Content -LiteralPath $hooksPath -Raw | ConvertFrom-Json
 
 if ($manifest.name -ne 'codex-cue') { throw 'Unexpected plugin name.' }
-if ($manifest.version -notmatch '^2\.0\.0(\+codex\.[0-9A-Za-z.-]+)?$') { throw 'Plugin version is not a valid 2.0.0 release.' }
+if ($manifest.version -notmatch '^2\.2\.0(\+codex\.[0-9A-Za-z.-]+)?$') { throw 'Plugin version is not a valid 2.2.0 release.' }
 if ($manifest.mcpServers -ne './.mcp.json') { throw 'Plugin manifest does not reference .mcp.json.' }
 if ($manifest.skills -ne './skills/') { throw 'Plugin manifest does not reference skills/.' }
 if ($manifest.interface.category -ne 'Productivity') { throw 'Plugin category must be Productivity.' }
@@ -49,12 +49,12 @@ foreach ($eventName in @('SessionStart', 'UserPromptSubmit', 'Stop')) {
     }
 }
 
-foreach ($required in @('ask_options', 'codex_cue', 'every user-facing question', 'PowerShell', 'single', 'multiple', 'allowOther', 'recommended', 'cancelled', 'timed_out', 'open-ended')) {
+foreach ($required in @('ask_options', 'codex_cue', 'user-facing question', 'PowerShell', 'single', 'multiple', 'allowOther', 'recommended', 'skipped', 'cancelled', 'timed_out', 'open text')) {
     if ($skillText -notmatch [regex]::Escape($required)) { throw "Skill is missing required guidance: $required" }
 }
 if ($skillText -match '\[TODO') { throw 'Skill still contains TODO placeholders.' }
 if ($agentText -notmatch 'Use \$cue-prompts') { throw 'Agent metadata default prompt does not invoke the skill.' }
-foreach ($required in @('2 or 3', 'ask_options', 'codex_cue', 'allowOther', 'submitted', 'cancelled', 'timed_out', 'PowerShell')) {
+foreach ($required in @('configured option count', 'default to 3', 'ask_options', 'codex_cue', 'allowOther', 'cancelLabel', 'cancelResult', 'submitted', 'skipped', 'cancelled', 'timed_out', 'Skip', 'PowerShell')) {
     if ($nextSkillText -notmatch [regex]::Escape($required)) { throw "Next-step skill is missing required guidance: $required" }
 }
 if ($nextSkillText -match '\[TODO') { throw 'Next-step skill still contains TODO placeholders.' }

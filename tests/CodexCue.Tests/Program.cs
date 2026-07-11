@@ -5,6 +5,7 @@ namespace CodexCue.Tests {
             TestRegistry tests = new TestRegistry();
             AppModeParserTests.Register(tests);
             HookContextWriterTests.Register(tests);
+            CueSettingsStoreTests.Register(tests);
             CodexConfigEditorTests.Register(tests);
             StartupRegistrationTests.Register(tests);
             RequestNormalizerTests.Register(tests);

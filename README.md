@@ -85,6 +85,10 @@
 
 ## 工具接口
 
+### 托盘设置与完成建议
+
+右键 Windows 任务栏通知区域中的 Codex Cue 对勾图标，选择“设置...”即可启用或关闭任务完成建议，并将每次建议数量配置为 1–6 个。选择“跳过下一次完成建议”只跳过一次，之后会自动恢复；下一步弹窗中的“跳过”按钮也会直接结束本次建议，不会重复追问。
+
 `ask_options` 接收动态数量的问题与选项；每题支持 `single`、`multiple` 和 `allowOther`。示例：
 
 ```json
@@ -116,7 +120,7 @@
 }
 ```
 
-结果状态为 `submitted`、`cancelled` 或 `timed_out`。成功结果按问题原始顺序返回 `answers`，并标记 `source: desktop-wpf`。`option_prompt_status` 只报告版本和队列数量，不暴露问题或答案内容。
+结果状态为 `submitted`、`skipped`、`cancelled` 或 `timed_out`。`skipped` 表示用户点击了明确的跳过按钮，`cancelled` 表示用户取消或关闭了窗口；成功结果按问题原始顺序返回 `answers`。`option_prompt_status` 只报告版本和队列数量，不暴露问题或答案内容。
 
 ## 升级、备份与卸载
 

@@ -26,14 +26,18 @@ namespace CodexCue.UiTests {
         public static UiDriver Start(string arguments) { return Start(arguments, 1.0); }
 
         public static UiDriver Start(string arguments, double scale) {
-            return Start(arguments, scale, false);
+            return Start(arguments, scale, false, false, false);
         }
+
+        public static UiDriver StartManyOptions() { return Start("--demo --automation", 1.0, false, true, false); }
+
+        public static UiDriver StartSettings() { return Start("--demo --automation", 1.0, false, false, true); }
 
         public static UiDriver StartReferenceCapture(double scale) {
-            return Start("--demo --automation", scale, true);
+            return Start("--demo --automation", scale, true, false, false);
         }
 
-        private static UiDriver Start(string arguments, double scale, bool referenceCapture) {
+        private static UiDriver Start(string arguments, double scale, bool referenceCapture, bool manyOptions, bool settingsDemo) {
             string executable = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CodexCue.exe");
             ProcessStartInfo start = new ProcessStartInfo {
                 FileName = executable,
@@ -44,6 +48,8 @@ namespace CodexCue.UiTests {
             };
             start.EnvironmentVariables["CODEX_CUE_AUTOMATION_SCALE"] = scale.ToString(System.Globalization.CultureInfo.InvariantCulture);
             if (referenceCapture) start.EnvironmentVariables["CODEX_CUE_REFERENCE_CAPTURE"] = "1";
+            if (manyOptions) start.EnvironmentVariables["CODEX_CUE_MANY_OPTIONS"] = "1";
+            if (settingsDemo) start.EnvironmentVariables["CODEX_CUE_SETTINGS_DEMO"] = "1";
             Process process = Process.Start(start);
             if (process == null) throw new InvalidOperationException("Demo process did not start.");
             return new UiDriver(process, scale);
@@ -135,6 +141,21 @@ namespace CodexCue.UiTests {
 
         public bool Exists(string automationId) { return WaitFor(automationId, 150) != null; }
 
+        public bool IsFullyVisible(string automationId) {
+            AutomationElement element = Require(automationId);
+            AutomationElement window = RequireWindowRoot();
+            return !element.Current.IsOffscreen && window.Current.BoundingRectangle.Contains(element.Current.BoundingRectangle);
+        }
+
+        public int VisibleScrollBarCount() {
+            AutomationElement window = Require("PromptWindow");
+            AutomationElementCollection bars = window.FindAll(TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ScrollBar));
+            int visible = 0;
+            foreach (AutomationElement bar in bars) if (!bar.Current.IsOffscreen) visible++;
+            return visible;
+        }
+
         public void SendAltF4() {
             AutomationElement window = Require("PromptWindow");
             IntPtr handle = new IntPtr(window.Current.NativeWindowHandle);
@@ -168,7 +189,7 @@ namespace CodexCue.UiTests {
         public bool WaitForExit(int timeoutMs) { return process.WaitForExit(timeoutMs); }
 
         public void Capture(string path) {
-            AutomationElement window = Require("PromptWindow");
+            AutomationElement window = RequireWindowRoot();
             try { window.SetFocus(); } catch (InvalidOperationException) { }
             Thread.Sleep(150);
             System.Windows.Rect bounds = window.Current.BoundingRectangle;
@@ -228,6 +249,15 @@ namespace CodexCue.UiTests {
             return result;
         }
 
+        private AutomationElement RequireWindowRoot() {
+            process.Refresh();
+            IntPtr handle = process.MainWindowHandle;
+            if (handle == IntPtr.Zero) throw new Exception("Process has no main window.");
+            AutomationElement root = AutomationElement.FromHandle(handle);
+            if (root == null) throw new Exception("Main window automation root is unavailable.");
+            return root;
+        }
+
         private AutomationElement WaitFor(string automationId, int timeoutMs) {
             Stopwatch timer = Stopwatch.StartNew();
             Condition condition = new AndCondition(
@@ -260,6 +290,15 @@ namespace CodexCue.UiTests {
     }
 
     internal static class WizardUiCaptures {
+        public static void CaptureSettings(string path) {
+            string directory = Path.GetDirectoryName(path);
+            if (!String.IsNullOrEmpty(directory)) Directory.CreateDirectory(directory);
+            using (UiDriver ui = UiDriver.StartSettings()) {
+                ui.WaitForWindow("SettingsWindow", 2500);
+                ui.Capture(path);
+            }
+        }
+
         public static void Capture(string directory) {
             Directory.CreateDirectory(directory);
             CaptureOne(directory, "wizard-100.png", 1.0);

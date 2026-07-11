@@ -8,11 +8,20 @@ namespace CodexCue.UiTests {
         private static int Main(string[] args) {
             string filter = "";
             string captureDirectory = null;
+            string settingsCapture = null;
             for (int index = 0; index < args.Length; index++) {
                 if (args[index] == "--capture-dir") {
                     if (index + 1 >= args.Length) throw new ArgumentException("Missing capture directory.");
                     captureDirectory = Path.GetFullPath(args[++index]);
+                } else if (args[index] == "--capture-settings") {
+                    if (index + 1 >= args.Length) throw new ArgumentException("Missing settings capture path.");
+                    settingsCapture = Path.GetFullPath(args[++index]);
                 } else filter = args[index];
+            }
+
+            if (settingsCapture != null) {
+                WizardUiCaptures.CaptureSettings(settingsCapture);
+                return 0;
             }
 
             TestRegistry tests = new TestRegistry();

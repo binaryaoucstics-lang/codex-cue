@@ -14,13 +14,17 @@ namespace CodexCue.Core {
                 return Invalid("At least one question is required.");
             }
             if (request.ReviewMode == ReviewMode.Invalid) return Invalid("Review mode is invalid.");
+            if (!String.Equals(request.CancelResult, "cancelled", StringComparison.Ordinal) &&
+                !String.Equals(request.CancelResult, "skipped", StringComparison.Ordinal)) {
+                return Invalid("Cancel result must be cancelled or skipped.");
+            }
             if (request.MaxWaitMs <= 0) return Invalid("Maximum wait must be positive.");
             if (request.AutoResolutionMs.HasValue &&
                 (request.AutoResolutionMs.Value < MinimumAutoResolutionMs ||
                  request.AutoResolutionMs.Value > MaximumAutoResolutionMs)) {
                 return Invalid("Auto resolution must be between 60,000 and 240,000 milliseconds.");
             }
-            if (TooLong(request.Title)) return Invalid("Request text exceeds 16 KiB.");
+            if (TooLong(request.Title) || TooLong(request.CancelLabel)) return Invalid("Request text exceeds 16 KiB.");
 
             HashSet<string> questionIds = new HashSet<string>(StringComparer.Ordinal);
             foreach (OptionQuestion question in request.Questions) {

@@ -79,6 +79,10 @@ Trust the hooks and create a new Codex task as described above. For MCP-only int
 
 ## MCP tool
 
+### Tray settings and completion suggestions
+
+Right-click the Codex Cue checkmark in the Windows notification area and select **Settings** to enable or disable completion suggestions and choose between 1 and 6 options per completion. **Skip next completion suggestion** is consumed once and then resets automatically. The next-step wizard also exposes an explicit **Skip** action and will not ask again for the same completion.
+
 `ask_options` accepts any number of questions and options. Each question supports `single`, `multiple`, and `allowOther`:
 
 ```json
@@ -101,7 +105,7 @@ Trust the hooks and create a new Codex task as described above. For MCP-only int
 }
 ```
 
-Results use the `submitted`, `cancelled`, or `timed_out` status. Successful results return ordered `answers` and identify `source: desktop-wpf`. `option_prompt_status` reports only the version and queue counts and never exposes prompt or answer text.
+Results use `submitted`, `skipped`, `cancelled`, or `timed_out`. `skipped` means the user clicked an explicit Skip action; `cancelled` means the user cancelled or closed the window. Successful results return ordered `answers`. `option_prompt_status` reports only version and queue counts.
 
 ## Build and test
 

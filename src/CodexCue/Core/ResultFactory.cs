@@ -35,6 +35,10 @@ namespace CodexCue.Core {
             return Create(request, "cancelled", "user");
         }
 
+        public static OptionResult Skipped(OptionRequest request) {
+            return Create(request, "skipped", "user");
+        }
+
         public static OptionResult TimedOut(OptionRequest request) {
             return Create(request, "timed_out", "auto");
         }

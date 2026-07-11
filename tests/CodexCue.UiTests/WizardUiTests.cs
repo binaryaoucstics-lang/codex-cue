@@ -3,6 +3,32 @@ using CodexCue.Tests;
 namespace CodexCue.UiTests {
     internal static class WizardUiTests {
         public static void Register(TestRegistry tests) {
+            tests.Add("SettingsUi displays and changes option count", delegate {
+                using (UiDriver ui = UiDriver.StartSettings()) {
+                    ui.WaitForWindow("SettingsWindow", 3000);
+                    Assert.True(ui.IsFullyVisible("OptionCountValue"));
+                    int initial = System.Int32.Parse(ui.Name("OptionCountValue"));
+                    if (initial < 6) {
+                        ui.Click("IncreaseOptionCount");
+                        Assert.Equal(initial + 1, System.Int32.Parse(ui.Name("OptionCountValue")));
+                    } else {
+                        ui.Click("DecreaseOptionCount");
+                        Assert.Equal(initial - 1, System.Int32.Parse(ui.Name("OptionCountValue")));
+                    }
+                    ui.Click("SettingsCancelButton");
+                    Assert.True(ui.WaitForExit(1000));
+                }
+            });
+            tests.Add("WizardUi shows four options without scrolling", delegate {
+                using (UiDriver ui = UiDriver.StartManyOptions()) {
+                    ui.WaitForWindow("PromptWindow", 3000);
+                    Assert.True(ui.IsFullyVisible("Option_installer"));
+                    Assert.True(ui.IsFullyVisible("Option_portable"));
+                    Assert.True(ui.IsFullyVisible("Option_weekend"));
+                    Assert.True(ui.IsFullyVisible("Option_explore"));
+                    Assert.Equal(0, ui.VisibleScrollBarCount());
+                }
+            });
             tests.Add("WizardUi demo completes single and multiple answers", delegate {
                 using (UiDriver ui = UiDriver.Start("--demo --automation")) {
                     ui.WaitForWindow("PromptWindow", 3000);

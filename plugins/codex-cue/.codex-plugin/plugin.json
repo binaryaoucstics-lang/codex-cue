@@ -1,6 +1,6 @@
 {
   "name": "codex-cue",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "description": "Route Codex questions and completed-task follow-ups to a lightweight Windows wizard.",
   "author": {
     "name": "binaryaoucstics-lang",
@@ -15,7 +15,7 @@
   "interface": {
     "displayName": "Codex Cue",
     "shortDescription": "Open questions and next-step choices in the wizard.",
-    "longDescription": "Uses lifecycle hooks to route every clarification, confirmation, open-ended question, and completed-task follow-up directly to the ask_options MCP tool and lightweight Windows WPF wizard without shell-based text transport.",
+    "longDescription": "Routes questions and completion follow-ups through lifecycle hooks to ask_options and a native WPF wizard using direct MCP JSON text.",
     "developerName": "binaryaoucstics-lang",
     "category": "Productivity",
     "capabilities": ["Interactive", "Read", "Write"],

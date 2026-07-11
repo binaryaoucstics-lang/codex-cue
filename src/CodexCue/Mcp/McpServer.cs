@@ -113,13 +113,15 @@ namespace CodexCue.Mcp {
             return ToolCatalog.D(
                 "protocolVersion", ProtocolVersion,
                 "capabilities", ToolCatalog.D("tools", ToolCatalog.D()),
-                "serverInfo", ToolCatalog.D("name", "codex-cue", "version", "2.0.0"),
-                "instructions", "Call ask_options directly for every question that needs a user response, including open-ended questions. Send all text in MCP JSON. Never use PowerShell, shell commands, clipboards, or files to transport question text.");
+                "serverInfo", ToolCatalog.D("name", "codex-cue", "version", "2.2.0"),
+                "instructions", "Use ask_options for user responses. Send text only in MCP JSON. statuses: submitted, skipped, cancelled, timed_out.");
         }
 
         private IDictionary<string, object> ToolResult(IDictionary<string, object> payload) {
+            object status;
+            string summary = payload.TryGetValue("status", out status) ? "status=" + Convert.ToString(status) : "ok";
             return ToolCatalog.D(
-                "content", new object[] { ToolCatalog.D("type", "text", "text", codec.Serialize(payload)) },
+                "content", new object[] { ToolCatalog.D("type", "text", "text", summary) },
                 "structuredContent", payload,
                 "isError", false);
         }
@@ -134,16 +136,12 @@ namespace CodexCue.Mcp {
                         "otherText", answer.OtherText));
                 }
             }
-            IDictionary<string, object> payload = ToolCatalog.D(
-                "status", result.Status,
-                "sessionId", result.SessionId,
-                "answers", answers.ToArray(),
-                "source", result.Source,
-                "resolution", result.Resolution,
-                "protocolVersion", result.ProtocolVersion,
-                "createdAt", Iso(result.CreatedAt),
-                "resolvedAt", Iso(result.ResolvedAt),
-                "compatibilityWarnings", ToObjects(result.CompatibilityWarnings));
+            IDictionary<string, object> payload = ToolCatalog.D("status", result.Status);
+            if (answers.Count > 0) payload["answers"] = answers.ToArray();
+            if (!String.IsNullOrEmpty(result.Resolution)) payload["resolution"] = result.Resolution;
+            if (result.CompatibilityWarnings != null && result.CompatibilityWarnings.Count > 0) {
+                payload["compatibilityWarnings"] = ToObjects(result.CompatibilityWarnings);
+            }
             if (result.SelectedOptionId != null) payload["selectedOptionId"] = result.SelectedOptionId;
             if (result.SelectedOption != null) {
                 payload["selectedOption"] = ToolCatalog.D(
