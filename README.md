@@ -1,7 +1,6 @@
 # Codex Option Prompts for Windows
 
-一个轻量的 Windows 桌面提问向导。Codex 通过本机 MCP 工具打开逐题界面，用户可直接点击单选、多选，也可以回答开放式问题。插件可通过生命周期钩子把需要用户回答的问题自动路由到桌面窗口。
-
+一个轻量的 Windows 桌面提问向导。Codex 通过本机 MCP 工具打开逐题界面，用户可直接点击单选、多选，也可以回答开放式问题。无需再复制粘贴回答
 ## 安装教程
 
 系统要求：Windows 10 22H2（19045）或更高版本、x64、.NET Framework 4.8。Windows 10/11 通常已包含所需运行时。
@@ -11,7 +10,7 @@
 1. 打开仓库的 [Releases](https://github.com/binaryaoucstics-lang/codex-option-prompts/releases) 页面，下载：
    - `CodexOptionPrompts-Setup-x64.exe`
    - `SHA256SUMS.txt`
-2. 在下载目录打开 PowerShell，校验安装包：
+2. 在下载目录打开 PowerShell，校验安装包（可选）：
 
    ```powershell
    Get-FileHash .\CodexOptionPrompts-Setup-x64.exe -Algorithm SHA256
@@ -21,6 +20,7 @@
    两处 SHA-256 应完全相同。
 3. 双击运行 `CodexOptionPrompts-Setup-x64.exe`。安装器会为当前用户安装应用、注册个人 marketplace、启用插件，并备份同名旧版本。
 4. 安装结束后，在 Codex CLI 输入 `/hooks`，找到 `codex-option-prompts` 提供的 `SessionStart` 和 `UserPromptSubmit`，检查命令指向插件内的 `CodexOptionPrompts.exe`，然后信任并启用两项钩子。
+   如使用codex/chatgpt桌面应用，点击左下角进入设置，在编码-钩子页面点击信任并启用两个钩子
 5. 关闭安装前已经打开的 Codex 任务，再新建一个任务。已打开的任务不会在运行中重新加载 Skill、MCP 或钩子。
 6. 可用以下命令验证安装：
 
